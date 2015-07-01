@@ -1,0 +1,19 @@
+{
+  "name": "Snappy Twitter",
+  "description": "Firefos OS addon making the Twitter app snappier",
+  "developer": {
+    "name": "Etienne Segonzac",
+    "url": "http://sgz.fr"
+  },
+  "package_path": "package.zip",
+  "role": "addon",
+  "type": "certified",
+  "customizations": [{
+    "filter": "mobile.twitter.com",
+    "css": [],
+    "scripts": ["index.js"]
+  }],
+  "icons": {
+    "128": "/icon.png"
+  }
+}
