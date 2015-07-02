@@ -26,33 +26,28 @@
       '.stream-item { scroll-snap-coordinate: 50% 0, 50% 100%; }',
       '.navbar .navItem.glow { background-position: 50% 100% }'
     ].join('\n'))
-    sheet.appendChild(styleText);
 
+    sheet.appendChild(styleText);
     document.head.appendChild(sheet);
 
-    // We need the twitter app to be loaded
-    setTimeout(function() {
-      var target = document.querySelector('#view-tweets');
-      var observer = new MutationObserver(function(mutations) {
-        window.scrollTo(0, 75);
-      });
-      var config = { attributes: true, childList: false, characterData: false };
-      observer.observe(target, config);
-    }, 1000);
-
     var scrolling = false;
-    var scrollingTimeout = null;
+    window.addEventListener('touchstart', function() {
+      scrolling = true;
+    });
+    window.addEventListener('touchend', function() {
+      scrolling = false;
+    });
+    window.addEventListener('touchcancel', function() {
+      scrolling = false;
+    });
 
     window.addEventListener('scroll', function(evt) {
-      var wasScrolling = scrolling;
-      scrolling = true;
+      if (evt.pageY !== 0) {
+        return;
+      }
 
-      clearTimeout(scrollingTimeout);
-      scrollingTimeout = setTimeout(function() {
-        scrolling = false;
-      }, 300);
-
-      if (!wasScrolling || (evt.pageY !== 0)) {
+      if (!scrolling) {
+        document.documentElement.scrollBy({top: 70, behavior: 'smooth'})
         return;
       }
 
@@ -75,12 +70,21 @@
   }
 
   function reload() {
+      var SCRIPT_ID = 'snappy-reload';
+      var SCRIPT_SELECTOR = 'script#' + SCRIPT_ID;
+
+      var existing = document.body.querySelector(SCRIPT_SELECTOR);
+      if (existing) {
+        existing.remove();
+      }
+
       var script = document.createElement('script');
+      script.setAttribute('id', SCRIPT_ID);
       script.setAttribute('type', 'application/javascript');
 
       var scriptText = document.createTextNode([
-        'TWITTER.use("view-registry", function(e) {e.getViewInstance("tweets").refreshContent()});',
-        'TWITTER.use("view-registry", function(e) {e.getViewInstance("connect").refreshContent()});'
+        'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("tweets"); v && v.refreshContent()});',
+        'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("connect"); v && v.refreshContent()});'
       ].join('\n'))
 
       script.appendChild(scriptText);
