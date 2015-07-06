@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
   if (document.documentElement) {
     initialize();
@@ -8,6 +8,7 @@
 
   function initialize() {
 
+    var TWITTER_COLOUR = '#55ACEE';
     var SHEET_ID = 'snappy-tweaks';
     var SHEET_SELECTOR = 'style#' + SHEET_ID;
 
@@ -15,6 +16,11 @@
     if (existing) {
       return;
     }
+
+    var themeColourMetaTag = document.createElement('meta');
+    themeColourMetaTag.setAttribute('name', 'theme-color');
+    themeColourMetaTag.setAttribute('content', TWITTER_COLOUR);
+    document.head.appendChild(themeColourMetaTag);
 
     var sheet = document.createElement('style');
     sheet.setAttribute('id', SHEET_ID);
@@ -25,7 +31,7 @@
       'body { scroll-snap-destination: 0 80px; scroll-snap-type: mandatory; }',
       '.stream-item { scroll-snap-coordinate: 50% 0, 50% 100%; }',
       '.navbar .navItem.glow { background-position: 50% 100% }'
-    ].join('\n'))
+    ].join('\n'));
 
     sheet.appendChild(styleText);
     document.head.appendChild(sheet);
@@ -47,7 +53,7 @@
       }
 
       if (!scrolling) {
-        document.documentElement.scrollBy({top: 70, behavior: 'smooth'})
+        document.documentElement.scrollBy({top: 70, behavior: 'smooth'});
         return;
       }
 
@@ -70,24 +76,24 @@
   }
 
   function reload() {
-      var SCRIPT_ID = 'snappy-reload';
-      var SCRIPT_SELECTOR = 'script#' + SCRIPT_ID;
+    var SCRIPT_ID = 'snappy-reload';
+    var SCRIPT_SELECTOR = 'script#' + SCRIPT_ID;
 
-      var existing = document.body.querySelector(SCRIPT_SELECTOR);
-      if (existing) {
-        existing.remove();
-      }
+    var existing = document.body.querySelector(SCRIPT_SELECTOR);
+    if (existing) {
+      existing.remove();
+    }
 
-      var script = document.createElement('script');
-      script.setAttribute('id', SCRIPT_ID);
-      script.setAttribute('type', 'application/javascript');
+    var script = document.createElement('script');
+    script.setAttribute('id', SCRIPT_ID);
+    script.setAttribute('type', 'application/javascript');
 
-      var scriptText = document.createTextNode([
-        'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("tweets"); v && v.refreshContent()});',
-        'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("connect"); v && v.refreshContent()});'
-      ].join('\n'))
+    var scriptText = document.createTextNode([
+      'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("tweets"); v && v.refreshContent()});',
+      'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("connect"); v && v.refreshContent()});'
+    ].join('\n'));
 
-      script.appendChild(scriptText);
-      document.body.appendChild(script);
+    script.appendChild(scriptText);
+    document.body.appendChild(script);
   }
 }());
