@@ -15,6 +15,7 @@ Relaunch Twitter
 * 60fps pull to refresh
 * scroll-snapping on tweets (always displays a full tweet at the top)
 * fixing the DM "glow" notification
+* adding a theme-color
 
 ## More about Firefox OS Addons
 https://developer.mozilla.org/en-US/Firefox_OS/Add-ons
