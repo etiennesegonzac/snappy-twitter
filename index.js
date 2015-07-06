@@ -8,6 +8,7 @@
 
   function initialize() {
 
+    var TWITTER_COLOUR = '#55ACEE';
     var SHEET_ID = 'snappy-tweaks';
     var SHEET_SELECTOR = 'style#' + SHEET_ID;
 
@@ -15,6 +16,11 @@
     if (existing) {
       return;
     }
+
+    var themeColourMetaTag = document.createElement('meta');
+    themeColourMetaTag.setAttribute('name', 'theme-color');
+    themeColourMetaTag.setAttribute('content', TWITTER_COLOUR);
+    document.head.appendChild(themeColourMetaTag);
 
     var sheet = document.createElement('style');
     sheet.setAttribute('id', SHEET_ID);
