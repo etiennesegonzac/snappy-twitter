@@ -29,7 +29,7 @@
     var styleText = document.createTextNode([
       '.view-tweets .stream-container, .view-connect .stream-container { margin-top: 70px; }',
       'body { scroll-snap-destination: 0 80px; scroll-snap-type: mandatory; }',
-      '.stream-item { scroll-snap-coordinate: 50% 0, 50% 100%; }',
+      '#view-tweets .stream-item, #view-connect .stream-item { scroll-snap-coordinate: 50% 0, 50% 100%; }',
       '.navbar .navItem.glow { background-position: 50% 100% }'
     ].join('\n'));
 
@@ -37,18 +37,34 @@
     document.head.appendChild(sheet);
 
     var scrolling = false;
+    var position = 0;
     window.addEventListener('touchstart', function() {
       scrolling = true;
     });
     window.addEventListener('touchend', function() {
       scrolling = false;
+      if (position < 4) {
+        var showing = document.querySelector('[showing=true]').id;
+        if (['view-tweets', 'view-connect'].indexOf(showing) === -1) {
+          return;
+        }
+        reload();
+      }
     });
     window.addEventListener('touchcancel', function() {
       scrolling = false;
     });
 
     window.addEventListener('scroll', function(evt) {
-      if (evt.pageY !== 0) {
+      position = evt.pageY;
+
+      if (position >= 4) {
+        cleanRotate();
+        return;
+      }
+
+      var showing = document.querySelector('[showing=true]').id;
+      if (['view-tweets', 'view-connect'].indexOf(showing) === -1) {
         return;
       }
 
@@ -57,25 +73,46 @@
         return;
       }
 
-      var title = document.querySelector('.title');
-      if (title.dataset.real) {
-        // Already reloading
-        return;
-      }
-
-      reload();
-
-      title.dataset.real = title.textContent;
-      title.textContent = '…';
-
-      setTimeout(function() {
-        title.textContent = title.dataset.real;
-        title.dataset.real = '';
-      }, 1500);
+      rotate();
     });
   }
 
+  function rotate() {
+    var nudges = document.querySelectorAll('[showing=true] .reload-nudge');
+    for (var nudge of nudges) {
+      nudge.style.transform = 'rotate(-90deg)';
+    }
+  }
+
+  function cleanRotate() {
+    var nudges = document.querySelectorAll('[showing=true] .reload-nudge');
+    for (var nudge of nudges) {
+      if (nudge.style.transform) {
+        nudge.style.transform = '';
+      }
+    }
+  }
+
   function reload() {
+    var tab = document.querySelector('.active').getAttribute('aria-label');
+    if (["Home", "Connect"].indexOf(tab) === -1) {
+      return;
+    }
+
+    var title = document.querySelector('.title');
+    if (title.dataset.real) {
+      // Already reloading
+      return;
+    }
+
+    title.dataset.real = title.textContent;
+    title.textContent = '…';
+
+    setTimeout(function() {
+      title.textContent = title.dataset.real;
+      title.dataset.real = '';
+    }, 1500);
+
     var SCRIPT_ID = 'snappy-reload';
     var SCRIPT_SELECTOR = 'script#' + SCRIPT_ID;
 
@@ -88,10 +125,12 @@
     script.setAttribute('id', SCRIPT_ID);
     script.setAttribute('type', 'application/javascript');
 
-    var scriptText = document.createTextNode([
-      'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("tweets"); v && v.refreshContent()});',
-      'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("connect"); v && v.refreshContent()});'
-    ].join('\n'));
+    var toReload = (tab == 'Home') ? 'tweets' : 'connect';
+
+    var scriptText = document.createTextNode(
+      'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("' +
+      toReload +
+      '"); v && v.refreshContent()});');
 
     script.appendChild(scriptText);
     document.body.appendChild(script);
