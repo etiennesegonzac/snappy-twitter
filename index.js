@@ -94,8 +94,8 @@
   }
 
   function reload() {
-    var tab = document.querySelector('.active').getAttribute('aria-label');
-    if (["Home", "Connect"].indexOf(tab) === -1) {
+    var tab = document.querySelector('.active').getAttribute('tab');
+    if (["tweets", "connect"].indexOf(tab) === -1) {
       return;
     }
 
