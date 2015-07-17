@@ -125,11 +125,9 @@
     script.setAttribute('id', SCRIPT_ID);
     script.setAttribute('type', 'application/javascript');
 
-    var toReload = (tab == 'Home') ? 'tweets' : 'connect';
-
     var scriptText = document.createTextNode(
       'TWITTER.use("view-registry", function(e) {var v = e.getViewInstance("' +
-      toReload +
+      tab +
       '"); v && v.refreshContent()});');
 
     script.appendChild(scriptText);
