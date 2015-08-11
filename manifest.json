@@ -1,0 +1,14 @@
+{
+  "name": "Snappy Twitter",
+  "version": "1.2",
+  "manifest_version": 3,
+  "description": "Firefos OS addon making the Twitter app snappier",
+  "permissions": [],
+  "author": "Etienne Segonzac",
+  "content_scripts": [
+    {"matches": ["https://mobile.twitter.com/"], "js": ["index.js"]}
+  ],
+  "icons": {
+    "128": "/icon.png"
+  }
+}

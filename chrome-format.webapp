@@ -1,0 +1,8 @@
+{
+  "name": "Snappy Twitter",
+  "description": "Firefos OS addon making the Twitter app snappier",
+  "developer": {
+    "name": "Etienne Segonzac"
+  },
+  "package_path": "chrome-format.zip"
+}
