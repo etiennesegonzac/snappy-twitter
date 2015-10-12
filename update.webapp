@@ -4,5 +4,8 @@
   "developer": {
     "name": "Etienne Segonzac"
   },
-  "package_path": "chrome-format.zip"
+  "package_path": "chrome-format.zip",
+  "icons": {
+    "128": "/icon.png"
+  }
 }
